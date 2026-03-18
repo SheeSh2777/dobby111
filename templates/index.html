@@ -18,32 +18,15 @@
   <section class="card">
     <h2>Design Input</h2>
 
-    <label>Input Method</label>
-    <div class="input-mode">
-      <label>
-        <input type="radio" name="inputMode" checked
-               onchange="switchInputMode('prompt')">
-        By Buyer Prompt
-      </label>
-      <label>
-        <input type="radio" name="inputMode"
-               onchange="switchInputMode('image')">
-        By Upload Image
-      </label>
-    </div>
-
-    <!-- PROMPT MODE -->
-    <div id="promptContainer">
-      <label>Search Design Prompt</label>
-        <div class="input-clear-wrapper">
-        <input id="promptInput"
-                list="promptList"
-                placeholder="Business shirt in blue and pink, Burberry checks…">
-        <span class="clear-btn" onclick="clearPrompt()">×</span>
-        </div>
-      <datalist id="promptList"></datalist>
-
-      <button id="generateBtn" onclick="getFromPrompt()">Get Properties from Prompt</button>
+    <!-- CHAT MODE -->
+    <div id="chatContainer">
+      <label>Chat with Design Assistant</label>
+      <div id="chatMessages" class="chat-box"></div>
+      <div class="input-clear-wrapper">
+        <input id="chatInput" placeholder="Describe the shirt design (e.g., elegant business shirt with balanced stripes)" onkeydown="if(event.key==='Enter'){sendChat();}">
+        <span class="clear-btn" onclick="clearChat()">×</span>
+      </div>
+      <button id="generateBtn" onclick="sendChat()">Send</button>
     </div>
 
     <!-- IMAGE MODE -->

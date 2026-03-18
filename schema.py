@@ -4,7 +4,12 @@ Complete schema matching Design Dobby Ver 22.0.0.357 "Automise Warp/Weft" dialog
 """
 
 from typing import List, Optional, Literal, Dict
-from typing_extensions import TypedDict
+
+try:
+    from typing_extensions import TypedDict
+except ImportError:
+    # Python 3.8+ includes TypedDict in typing; fallback for newer Python versions.
+    from typing import TypedDict
 
 
 # ============================================================================

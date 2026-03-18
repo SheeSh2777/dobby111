@@ -177,7 +177,7 @@ class OpenRouterProvider(LLMProvider):
                     model=model,
                     messages=messages,
                     temperature=0.3,
-                    max_tokens=2048
+                    max_tokens=512
                 )
                 return response.choices[0].message.content
             except Exception as e:
@@ -207,52 +207,45 @@ class MockProvider(LLMProvider):
         last_user_message = next(
             (m['content'] for m in reversed(messages) if m['role'] == 'user'),
             "No question asked."
-        )
-        
-        # detailed mock response matching schema
-        mock_response = {
-            "intent": "check",
-            "template": "classic_check",
-            "confidence": 0.99,
-            "clarification_required": False,
-            "question": None,
-            "parameters": {
-                "unit": "Ends",
-                "colors": 2,
-                "ground": 0,
-                "generate_range": {"from_value": 96, "to_value": 192},
-                "generate_mode": "Check",
-                "epi_ppi": True,
-                "checks": {
-                    "regular": True,
-                    "balance_checks": True,
-                    "graded": False,
-                    "counter": False,
-                    "even_warp": True,
-                    "even_weft": True,
-                    "weave": False
-                },
-                "fil_a_fil": {"enabled": False, "mode": "Auto"},
-                "design_style": "Solid",
-                "mode": "Normal",
-                "solid_mode": {
-                    "stripe_width_min": 2,
-                    "stripe_width_max": 8,
-                    "multi_factor_min": 1,
-                    "multi_factor_max": 2
-                },
-                "gradient_mode": None,
-                "color_mapping": {"color1": "Black", "color2": "White", "color3": None, "color4": None},
-                "display_swatch": {"x": 4, "y": 4}
-            },
-            "visual_metadata": {
-                "fabric_type": "Cotton",
-                "gloss": 0.1,
-                "texture_noise": 0.2,
-                "cross_section": "Circular"
+        ).lower()
+
+        # Basic rules to vary response for different prompts.
+        if "school uniform" in last_user_message or "school" in last_user_message:
+            design = {
+                "designSize": "Small",
+                "designSizeRangeCm": {"min": 3, "max": 6},
+                "designStyle": "Regular",
+                "weave": "Plain"
             }
+            colors = [{"name": "Navy Blue", "percentage": 80}, {"name": "White", "percentage": 20}]
+            stripe = {"stripeSizeRangeMm": {"min": 1, "max": 4}, "stripeMultiplyRange": {"min": 0, "max": 1}, "isSymmetry": True}
+            technical = {"yarnCount": "40s", "construction": "100 x 80 / 40s x 40s", "gsm": 115, "epi": 100, "ppi": 80}
+            market = {"occasion": "Formal"}
+            visual = {"contrastLevel": "Medium"}
+        elif "flannel" in last_user_message or "warm" in last_user_message or "winter" in last_user_message:
+            design = {"designSize": "Large", "designSizeRangeCm": {"min": 6, "max": 10}, "designStyle": "Regular", "weave": "Twill"}
+            colors = [{"name": "Maroon", "percentage": 60}, {"name": "Grey", "percentage": 40}]
+            stripe = {"stripeSizeRangeMm": {"min": 8, "max": 15}, "stripeMultiplyRange": {"min": 1, "max": 3}, "isSymmetry": True}
+            technical = {"yarnCount": "30s", "construction": "80 x 72 / 30s x 30s", "gsm": 220, "epi": 80, "ppi": 72}
+            market = {"occasion": "Casual"}
+            visual = {"contrastLevel": "High"}
+        else:
+            design = {"designSize": "Medium", "designSizeRangeCm": {"min": 4, "max": 8}, "designStyle": "Solid", "weave": "Plain"}
+            colors = [{"name": "Blue", "percentage": 55}, {"name": "White", "percentage": 45}]
+            stripe = {"stripeSizeRangeMm": {"min": 2, "max": 6}, "stripeMultiplyRange": {"min": 1, "max": 2}, "isSymmetry": True}
+            technical = {"yarnCount": "50s", "construction": "110 x 72 / 50s x 50s", "gsm": 130, "epi": 110, "ppi": 72}
+            market = {"occasion": "Formal"}
+            visual = {"contrastLevel": "Low"}
+
+        mock_response = {
+            "design": design,
+            "stripe": stripe,
+            "colors": colors,
+            "visual": visual,
+            "market": market,
+            "technical": technical
         }
-        
+
         return json.dumps(mock_response)
 
     def get_model_name(self) -> str:

@@ -27,6 +27,44 @@ function switchInputMode(mode) {
   if (imageContainer) imageContainer.style.display = mode === "image" ? "block" : "none";
 }
 
+let chatHistory = [];
+let conversationMessages = [];
+
+function addChatMessage(role, text) {
+  chatHistory.push({ role, text });
+  renderChat();
+}
+
+function renderChat() {
+  const chatMessages = document.getElementById('chatMessages');
+  if (!chatMessages) return;
+  chatMessages.innerHTML = '';
+
+  chatHistory.forEach(item => {
+    const messageElem = document.createElement('div');
+    messageElem.className = item.role === 'user' ? 'chat-message user' : 'chat-message bot';
+    messageElem.textContent = item.text;
+    chatMessages.appendChild(messageElem);
+  });
+
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function switchInputMode(mode) {
+  const promptContainer = document.getElementById('promptContainer');
+  const imageContainer = document.getElementById('imageContainer');
+  const chatContainer = document.getElementById('chatContainer');
+
+  if (promptContainer) promptContainer.style.display = mode === 'prompt' ? 'block' : 'none';
+  if (chatContainer) chatContainer.style.display = mode === 'prompt' ? 'block' : 'none';
+  if (imageContainer) imageContainer.style.display = mode === 'image' ? 'block' : 'none';
+}
+
+function clearChat() {
+  const input = document.getElementById('chatInput');
+  if (input) input.value = '';
+}
+
 function onImageSelected() {
   const imageInput = document.getElementById('imageInput');
   const imageInfo = document.getElementById('imageInfo');
@@ -38,9 +76,82 @@ function onImageSelected() {
   }
 }
 
+async function sendChat() {
+  const chatInput = document.getElementById("chatInput");
+  const btn = document.getElementById("generateBtn");
+  if (!chatInput || !chatInput.value.trim()) return;
+
+  const prompt = chatInput.value.trim();
+  addChatMessage('user', prompt);
+  chatInput.value = '';
+
+  // add system prompt to conversation if first message
+  if (conversationMessages.length === 0) {
+    conversationMessages.push({ role: 'system', content: `You are a professional textile and yarn pattern identification expert and technical advisor. Answer with practical recommendations, ask clarifying questions, and provide the best solution in the context of yarn and fabric design.` });
+  }
+
+  // add user message to conversation history for multi-turn context
+  conversationMessages.push({ role: 'user', content: prompt });
+
+  // Loading state
+  const prevText = btn.textContent;
+  btn.textContent = "Thinking...";
+  btn.disabled = true;
+  document.body.style.cursor = "wait";
+
+  try {
+    const response = await fetch('/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: conversationMessages })
+    });
+
+    const data = await response.json();
+
+    if (data.error) {
+      throw new Error(data.error);
+    }
+
+    let botText = "Hi! I'm your textile assistant. Ask me anything about yarn, patterns, or fabric construction.";
+
+    // Apply structured data to the form if available
+    if (data.structured) {
+      applyData(data.structured);
+      botText = "I've updated the design parameters and material suggestions based on your request.";
+    }
+
+    // If provider gives a natural language reply, use it to keep conversation interactive
+    if (data.reply) {
+      const raw = data.reply.trim();
+      const isJson = raw.startsWith('{') || raw.startsWith('[');
+      if (!isJson) {
+        botText = raw;
+      } else if (data.structured) {
+        botText = "I have updated the structured design details. What else would you like to refine (e.g., yarn count, color mix, or weave type)?";
+      }
+    }
+
+    // Encourage follow-up questions
+    if (conversationMessages.length > 0) {
+      botText += "\n\n(Feel free to ask for recommendations, production constraints, or style variations.)";
+    }
+
+    addChatMessage('assistant', botText);
+    conversationMessages.push({ role: 'assistant', content: botText });
+
+  } catch (error) {
+    console.error("Error:", error);
+    addChatMessage('assistant', "Error: " + error.message);
+  } finally {
+    btn.textContent = prevText;
+    btn.disabled = false;
+    document.body.style.cursor = "default";
+  }
+}
+
 async function getFromPrompt() {
   const promptInput = document.getElementById("promptInput");
-  const generateBtn = document.getElementById("generateBtn");
+  const generateBtn = document.getElementById("generateBtnPrompt");
 
   const prompt = promptInput.value.trim();
   if (!prompt) return alert("Enter or select a prompt");
@@ -73,7 +184,6 @@ async function getFromPrompt() {
     if (data.structured) {
       applyData(data.structured);
     } else {
-      // Fallback if no structured data found (e.g. error in LLM json generation)
       alert("Could not generate structured textile data. Raw response: " + data.reply);
       console.error("Raw reply:", data.reply);
     }
@@ -82,7 +192,6 @@ async function getFromPrompt() {
     console.error("Error:", error);
     alert("Failed to generate design: " + error.message);
   } finally {
-    // Restore State
     generateBtn.textContent = originalText;
     generateBtn.disabled = false;
     document.body.style.cursor = "default";

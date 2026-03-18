@@ -280,3 +280,39 @@ pre {
 .clear-btn:hover {
   color: #374151;
 }
+
+.chat-box {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px;
+  min-height: 180px;
+  max-height: 280px;
+  overflow-y: auto;
+  background: #fff;
+}
+
+.chat-message {
+  padding: 8px 10px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.chat-message.user {
+  align-self: flex-end;
+  background: #e0efff;
+  color: #0f172a;
+}
+
+.chat-message.bot {
+  align-self: flex-start;
+  background: #f3f4f6;
+  color: #1f2933;
+}
+
+#chatMessages {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
