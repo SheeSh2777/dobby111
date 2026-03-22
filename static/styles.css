@@ -1,0 +1,318 @@
+/* ================================
+   THEME VARIABLES
+================================ */
+:root {
+  --bg: #f4f6f8;
+  --card: #ffffff;
+  --border: #e2e6ea;
+  --text: #1f2933;
+  --muted: #6b7280;
+  --primary: #1e40af;
+  --secondary: #6b7280;
+  --json-bg: #0f172a;
+  --json-text: #d1d5db;
+}
+
+/* ================================
+   BASE
+================================ */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* ================================
+   HEADER / FOOTER
+================================ */
+.app-header {
+  background: var(--text);
+  color: #fff;
+  padding: 16px 32px;
+}
+
+.logo {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.subtitle {
+  font-size: 13px;
+  opacity: 0.85;
+}
+
+.app-footer {
+  background: #111827;
+  color: #9ca3af;
+  text-align: center;
+  padding: 14px;
+  font-size: 13px;
+}
+
+/* ================================
+   LAYOUT
+================================ */
+.container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 24px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 24px;
+}
+
+.card h2 {
+  margin: 0 0 14px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* ================================
+   FORM ELEMENTS
+================================ */
+label {
+  display: block;
+  margin-top: 14px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+input,
+select {
+  /* width: 100%; */
+  /* max-width: 360px; */
+  padding: 9px 10px;
+  margin-top: 6px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 14px;
+  background: #fff;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+/* Editable dropdown */
+input[list] {
+  cursor: text;
+}
+
+/* ================================
+   RANGE INPUT GROUP
+================================ */
+.range-group {
+  display: flex;
+  gap: 8px;
+  max-width: 360px;
+}
+
+.range-group input {
+  flex: 1;
+}
+
+/* ================================
+   CHECKBOX
+================================ */
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 18px;
+  font-size: 14px;
+}
+
+.checkbox-label input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+}
+
+/* ================================
+   INPUT MODE (RADIO)
+================================ */
+.input-mode {
+  display: flex;
+  gap: 24px;
+  margin: 10px 0 18px;
+}
+
+.input-mode label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.input-mode input {
+  margin: 0;
+}
+
+/* ================================
+   BUTTONS
+================================ */
+button {
+  margin-top: 18px;
+  padding: 10px 20px;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.95;
+}
+
+button.secondary {
+  background: var(--secondary);
+}
+
+/* ================================
+   GRID LAYOUTS
+================================ */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+/* ================================
+   SUMMARY BOX
+================================ */
+#summaryBox p {
+  margin: 6px 0;
+  font-size: 14px;
+}
+
+#summaryBox b {
+  font-weight: 600;
+}
+
+/* ================================
+   JSON VIEW
+================================ */
+.json-box,
+pre {
+  background: var(--json-bg);
+  color: var(--json-text);
+  padding: 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  max-height: 320px;
+  overflow: auto;
+  line-height: 1.4;
+}
+
+/* ================================
+   HELP / HINT TEXT
+================================ */
+.hint {
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* ================================
+   RESPONSIVE
+================================ */
+@media (max-width: 900px) {
+  .form-grid,
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  input,
+  select,
+  .range-group {
+    max-width: 100%;
+  }
+}
+
+/* ================================
+   CLEAR BUTTON INSIDE INPUT
+================================ */
+.input-clear-wrapper {
+  position: relative;
+  max-width: 50%;
+}
+
+.input-clear-wrapper input {
+  padding-right: 30px; /* space for X */
+  width: 100%;
+}
+
+.clear-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: #9ca3af;
+  cursor: pointer;
+  user-select: none;
+  line-height: 1;
+}
+
+.clear-btn:hover {
+  color: #374151;
+}
+
+.chat-box {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px;
+  min-height: 180px;
+  max-height: 280px;
+  overflow-y: auto;
+  background: #fff;
+}
+
+.chat-message {
+  padding: 8px 10px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.chat-message.user {
+  align-self: flex-end;
+  background: #e0efff;
+  color: #0f172a;
+}
+
+.chat-message.bot {
+  align-self: flex-start;
+  background: #f3f4f6;
+  color: #1f2933;
+}
+
+#chatMessages {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
