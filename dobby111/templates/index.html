@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Yarn Dyed Shirting – Design Studio</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+<header class="app-header">
+  <div class="logo">TEXTRONICS DESIGNDOBBY AI</div>
+  <div class="subtitle">Yarn Dyed Shirting · Buyer Design Studio</div>
+</header>
+
+<main class="container">
+
+  <!-- DESIGN INPUT -->
+  <section class="card">
+    <h2>Design Input</h2>
+
+    <!-- CHAT MODE -->
+    <div id="chatContainer">
+      <label>Chat with Design Assistant</label>
+      <div id="chatMessages" class="chat-box"></div>
+      <div class="input-clear-wrapper">
+        <input id="chatInput" placeholder="Describe the shirt design (e.g., elegant business shirt with balanced stripes)" onkeydown="if(event.key==='Enter'){sendChat();}">
+        <span class="clear-btn" onclick="clearChat()">×</span>
+      </div>
+      <button id="generateBtn" onclick="sendChat()">Send</button>
+    </div>
+
+    <!-- IMAGE MODE -->
+    <div id="imageContainer" style="display:none;">
+      <label>Upload Reference Image</label>
+      <input type="file" id="imageInput" accept="image/*"
+             onchange="onImageSelected()">
+      <div id="imageInfo" class="hint"></div>
+
+      <button class="secondary" onclick="getFromImage()">
+        Get Properties from Image
+      </button>
+    </div>
+  </section>
+
+  <!-- DESIGN PROPERTIES -->
+  <section class="card">
+    <h2>Design Properties</h2>
+
+    <div class="form-grid">
+
+      <div>
+        <label>Design Size</label>
+        <select id="designSize"></select>
+
+        <label>Design Size Range (cm)</label>
+        <div class="range-group">
+          <input id="designSizeMin" type="number" placeholder="Min">
+          <input id="designSizeMax" type="number" placeholder="Max">
+        </div>
+
+        <label>Design Style</label>
+        <select id="designStyle"></select>
+
+        <label>Weave</label>
+        <select id="weave"></select>
+
+        <label>Color Composition</label>
+        <input id="colorComposition" type="text">
+      </div>
+
+      <div>
+        <label>Stripe Size Range (mm)</label>
+        <div class="range-group">
+          <input id="stripeSizeMin" type="number" placeholder="Min">
+          <input id="stripeSizeMax" type="number" placeholder="Max">
+        </div>
+
+        <label>Stripe Multiply Range (times)</label>
+        <div class="range-group">
+          <input id="stripeRepeatMin" type="number" placeholder="Min">
+          <input id="stripeRepeatMax" type="number" placeholder="Max">
+        </div>
+
+        <label class="checkbox-label">
+          <input type="checkbox" id="isSymmetry">
+          Symmetry Pattern
+        </label>
+
+        <label>Contrast Level</label>
+        <select id="contrastLevel"></select>
+
+        <label>Occasion</label>
+        <select id="occasion"></select>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- OUTPUT -->
+  <section class="card">
+    <h2>Design Output</h2>
+
+    <div class="summary-grid">
+      <div>
+        <h3>Design Summary</h3>
+        <div id="summaryBox"></div>
+      </div>
+
+      <div>
+        <h3>API / Mock JSON</h3>
+        <pre id="jsonBox" class="json-box">{}</pre>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="app-footer">
+  © 2026 Company Name
+</footer>
+
+<script src="{{ url_for('static', filename='promptData.js') }}"></script>
+<script src="{{ url_for('static', filename='chat.js') }}"></script>
+</body>
+</html>
